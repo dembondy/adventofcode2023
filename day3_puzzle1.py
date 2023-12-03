@@ -339,14 +339,14 @@ if __name__ == "__main__":
     number_groups = generate_number_groups(matrix)
     relevant_numbers = get_relevant_numbers(number_groups)
     relevant_numbers_for_gears = get_relevant_gears(matrix, number_groups)
+    relevant_numbers_for_gears = [
+        gear for gear in relevant_numbers_for_gears if len(gear) == 2
+    ]
     result_part_2 = []
     for relevant_number_for_gears in relevant_numbers_for_gears:
-        try:
-            result_part_2.append(
-                relevant_number_for_gears[0].value * relevant_number_for_gears[1].value
-            )
-        except IndexError:
-            pass
+        result_part_2.append(
+            relevant_number_for_gears[0].value * relevant_number_for_gears[1].value
+        )
     print(matrix)
     print(relevant_numbers_for_gears)
     print("result part 1: ", sum([number.value for number in relevant_numbers]))
