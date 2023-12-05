@@ -1,10 +1,6 @@
 import numpy as np
 
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
 class Number:
     def __init__(self, number, x, y):
         self.number = number
@@ -22,67 +18,18 @@ class Number:
     def check_for_symbol_adjacency(self, matrix):
         x = self.position[0]
         y = self.position[1]
-        self.check_left(matrix, x, y)
-        self.check_right(matrix, x, y)
-        self.check_up(matrix, x, y)
-        self.check_down(matrix, x, y)
-        self.check_up_left(matrix, x, y)
-        self.check_down_left(matrix, x, y)
-        self.check_up_right(matrix, x, y)
-        self.check_down_right(matrix, x, y)
+        for coordinate in self.adjacent_coordinates:
+            self.check_coordinate(matrix, coordinate)
 
-    def check_down_right(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y + 1, x + 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
+    @property
+    def adjacent_coordinates(self) -> list:
+        x = self.position[0]
+        y = self.position[1]
+        return generate_adjacent_coordinates(x, y)
 
-    def check_up_right(self, matrix, x, y):
+    def check_coordinate(self, matrix, coordinate):
         try:
-            if is_symbol(matrix[y + 1, x - 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_down_left(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y - 1, x + 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_up_left(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y - 1, x - 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_down(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y, x + 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_up(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y, x - 1]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_right(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y + 1, x]):
-                self.is_adjacent_to_symbol = True
-        except IndexError:
-            pass
-
-    def check_left(self, matrix, x, y):
-        try:
-            if is_symbol(matrix[y - 1, x]):
+            if is_symbol(matrix[coordinate[1], coordinate[0]]):
                 self.is_adjacent_to_symbol = True
         except IndexError:
             pass
@@ -135,85 +82,42 @@ class Gear:
     def __repr__(self):
         return "⚙️"
 
+    @property
+    def adjacent_coordinates(self) -> list:
+        x = self.position[0]
+        y = self.position[1]
+        return generate_adjacent_coordinates(x, y)
+
     def check_for_number_adjacency(self, matrix):
         x = self.position[0]
         y = self.position[1]
-        self.check_left(matrix, x, y)
-        self.check_right(matrix, x, y)
-        self.check_up(matrix, x, y)
-        self.check_down(matrix, x, y)
-        self.check_up_left(matrix, x, y)
-        self.check_down_left(matrix, x, y)
-        self.check_up_right(matrix, x, y)
-        self.check_down_right(matrix, x, y)
+        for coordinate in self.adjacent_coordinates:
+            self.check_coordinate(matrix, coordinate)
 
     def add_to_numbers(self, number: Number):
         if number not in self.adjacent_numbers:
             self.adjacent_numbers.append(number)
 
-    def check_down_right(self, matrix, x, y):
+    def check_coordinate(self, matrix, coordinate):
         try:
-            if isinstance(matrix[y + 1, x + 1], Number):
-                self.add_to_numbers(matrix[y + 1, x + 1])
-                matrix[y + 1, x + 1].is_adjacent_to_gear = True
+            if isinstance(matrix[coordinate[1], coordinate[0]], Number):
+                self.add_to_numbers(matrix[coordinate[1], coordinate[0]])
+                matrix[coordinate[1], coordinate[0]].is_adjacent_to_gear = True
         except IndexError:
             pass
 
-    def check_up_right(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y + 1, x - 1], Number):
-                self.add_to_numbers(matrix[y + 1, x - 1])
-                matrix[y + 1, x - 1].is_adjacent_to_gear = True
-        except IndexError:
-            pass
 
-    def check_down_left(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y - 1, x + 1], Number):
-                self.add_to_numbers(matrix[y - 1, x + 1])
-                matrix[y - 1, x + 1].is_adjacent_to_gear = True
-        except IndexError:
-            pass
-
-    def check_up_left(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y - 1, x - 1], Number):
-                self.add_to_numbers(matrix[y - 1, x - 1])
-                matrix[y - 1, x - 1].is_adjacent_to_gear = True
-        except IndexError:
-            pass
-
-    def check_down(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y, x + 1], Number):
-                self.add_to_numbers(matrix[y, x + 1])
-                matrix[y, x + 1].is_adjacent_to_gear = True
-        except IndexError:
-            pass
-
-    def check_up(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y, x - 1], Number):
-                self.add_to_numbers(matrix[y, x - 1])
-                matrix[y, x - 1].is_adjacent_to_gear = True
-        except IndexError:
-            pass
-
-    def check_right(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y + 1, x], Number):
-                self.add_to_numbers(matrix[y + 1, x])
-                matrix[y + 1, x].is_adjacent_to_gear = True
-        except IndexError:
-            pass
-
-    def check_left(self, matrix, x, y):
-        try:
-            if isinstance(matrix[y - 1, x], Number):
-                self.add_to_numbers(matrix[y - 1, x])
-                matrix[y - 1, x].is_adjacent_to_gear = True
-        except IndexError:
-            pass
+def generate_adjacent_coordinates(x, y):
+    return [
+        (x - 1, y),
+        (x + 1, y),
+        (x, y - 1),
+        (x, y + 1),
+        (x - 1, y - 1),
+        (x - 1, y + 1),
+        (x + 1, y - 1),
+        (x + 1, y + 1),
+    ]
 
 
 def parse_file(name: str) -> list:
@@ -331,7 +235,7 @@ def generate_number_groups(matrix: np.array) -> list:
 
 if __name__ == "__main__":
     file = parse_file("input3_puzzle1")
-    # file = parse_file("test_file")
+    # file = parse_file("test_file_day3")
     matrix_file = generate_matrix(file)
     adjacency_matrix = generate_adjacency_list(matrix_file)
     adjacency_matrix = generate_gear_adjacency_list(adjacency_matrix)
